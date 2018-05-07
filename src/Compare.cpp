@@ -3211,8 +3211,8 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification* notifyCode)
 
 extern "C" __declspec(dllexport) LRESULT messageProc(UINT msg, WPARAM wParam, LPARAM)
 {
-	if (msg == WM_SIZE)
-	{
+	switch (msg) {
+	case WM_SIZE:
 		if (wParam == SIZE_MINIMIZED)
 		{
 			if (!isNppMinimized && NppSettings::get().compareMode)
@@ -3230,8 +3230,73 @@ extern "C" __declspec(dllexport) LRESULT messageProc(UINT msg, WPARAM wParam, LP
 			if (isNppMinimized && !delayedMaximize)
 				delayedMaximize.post(500);
 		}
+		break;
+	case NPPM_MSGTOPLUGIN:
+		CommunicationInfo * comm = ((CommunicationInfo *)lParam);
+		switch (comm->internalMsg) {
+		case CMD_ABOUT:
+			OpenAboutDlg();
+			break;
+		case CMD_CLEAR_ACTIVE:
+			ClearActiveCompare();
+			break;
+		case CMD_CLEAR_ALL:
+			ClearAllCompares();
+			break;
+		case CMD_COMPARE:
+			CompareWhole();
+			break;
+		case CMD_COMPARE_SEL:
+			CompareSelections();
+			break;
+		case CMD_DETECT_MOVES:
+			DetectMoves();
+			break;
+		case CMD_FIND_UNIQUE:
+			FindUnique();
+			break;
+		case CMD_FIND_UNIQUE_SEL:
+			FindSelectionsUnique();
+			break;
+		case CMD_FIRST:
+			First();
+			break;
+		case CMD_GIT_DIFF:
+			GitDiff();
+			break;
+		case CMD_IGNORE_CASE:
+			IgnoreCase();
+			break;
+		case CMD_IGNORE_SPACES:
+			IgnoreSpaces();
+			break;
+		case CMD_LAST:
+			Last();
+			break;
+		case CMD_LAST_SAVE_DIFF:
+			LastSaveDiff();
+			break;
+		case CMD_NAV_BAR:
+			ViewNavigationBar();
+			break;
+		case CMD_NEXT:
+			Next();
+			break;
+		case CMD_PREV:
+			Prev();
+			break;
+		case CMD_SETTINGS:
+			OpenSettingsDlg();
+			break;
+		case CMD_SET_FIRST:
+			SetAsFirst();
+			break;
+		case CMD_SVN_DIFF:
+			SvnDiff();
+			break;
+		}
+		break;
 	}
-
 	return TRUE;
 }
 
